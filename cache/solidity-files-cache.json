@@ -785,8 +785,8 @@
       "artifacts": []
     },
     "/home/martin/decentralized_marketplace/contracts/Repository.sol": {
-      "lastModificationDate": 1744740037902,
-      "contentHash": "26e21863d0f5b170535cb18e2711b3b4",
+      "lastModificationDate": 1744829846274,
+      "contentHash": "f93f390ad4014b679d3e18c3e6832391",
       "sourceName": "contracts/Repository.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -824,8 +824,8 @@
       ]
     },
     "/home/martin/decentralized_marketplace/contracts/Registry.sol": {
-      "lastModificationDate": 1744740027649,
-      "contentHash": "3a781730cb0356e6d7618b39eec8795d",
+      "lastModificationDate": 1744740139611,
+      "contentHash": "ac24f77aa3c5d4d0af813197e276e5fd",
       "sourceName": "contracts/Registry.sol",
       "solcConfig": {
         "version": "0.8.28",

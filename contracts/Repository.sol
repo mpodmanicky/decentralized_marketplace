@@ -9,17 +9,17 @@ import "./ERC_5521.sol";
 contract Repository is ERC_5521 {
     address private immutable owner;
     uint256 private licenseCounter = 1000000;
-    uint256 private softwareCount = 0;
+    uint256 public softwareCount = 0;
     struct SoftwareMeta {
         address creator;
         string tokenURI;
         address[] deps;
         uint256[][] depTokenIds;
     }
-    mapping(uint256 => SoftwareMeta) private softwareMeta; // tokenId => SoftwareMeta
+    mapping(uint256 => SoftwareMeta) public softwareMeta; // tokenId => SoftwareMeta
     // TODO add a mapping to store the software NFTs
     // TODO add a mapping to store the software licenses
-    mapping(uint256 => uint256[]) private softwareToLicenses; // tokenId => licenseId
+    mapping(uint256 => uint256[]) public softwareToLicenses; // tokenId => licenseId
 
     /// TODO registry is the owner [x]
     constructor(address _address) ERC_5521("Software", "SOF") {
@@ -108,5 +108,5 @@ contract Repository is ERC_5521 {
         return tokenId >= 1000000;
     }
 
-    
+
 }
