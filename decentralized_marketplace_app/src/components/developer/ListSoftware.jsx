@@ -35,10 +35,11 @@ const ListSoftware = () => {
         }
 
         // Get the repository contract
-        const repositoryContract = repoAddress;
+        const repositoryContract = await getRepositoryContract(repoAddress);
+        console.log("Repository contract:", repositoryContract);
 
         // Fetch the tokens owned by this repository
-        const tokenCount = await repositoryContract.softwareCount;
+        const tokenCount = await repositoryContract.softwareCount();
         console.log("Total tokens in repository:", tokenCount.toString());
 
         const tokens = [];
@@ -47,12 +48,9 @@ const ListSoftware = () => {
         for (let i = 1; i <= tokenCount; i++) {
           try {
             // Try to get token URI - if this succeeds, the token exists
-            const exists = await repositoryContract.exists(i);
+            const ownerOf = await repositoryContract.ownerOf(i);
+            console.log(`Token ${i} owner:`, ownerOf);
 
-            if (!exists) {
-              console.log(`Token ${i} doesn't exist, skipping`);
-              continue;
-            }
 
             console.log(`Found token ${i}`);
 
@@ -117,7 +115,7 @@ const ListSoftware = () => {
   // Handler for listing a token on the marketplace
   const handleListSoftware = async (e) => {
     e.preventDefault();
-    if (!selectedToken || !price || price <= 0 || !repositoryAddress) {
+    if (!selectedToken || !price || price <= 0) {
       setError("Please select a software and set a valid price");
       return;
     }
@@ -130,34 +128,16 @@ const ListSoftware = () => {
       // Convert price to wei
       const priceInWei = ethers.parseEther(price);
       console.log("Listing software:", selectedToken, "for price:", priceInWei.toString());
-      console.log("Repository address:", repositoryAddress);
-      console.log("Marketplace address:", marketplace.target);
 
-      // Get repository contract
-      const repositoryContract = await getRepositoryContract(repositoryAddress);
-
-      // First, approve the marketplace to transfer the token
-      console.log("Approving marketplace to transfer token...");
-      const approveTx = await repositoryContract.approve(
-        marketplace.target,
-        selectedToken,
-        { gasLimit: 3000000 }
-      );
-      console.log("Approval transaction sent:", approveTx.hash);
-
-      const approveReceipt = await approveTx.wait();
-      console.log("Approval confirmed, receipt:", approveReceipt);
-
-      // Now list the software on the marketplace
-      console.log("Listing on marketplace...");
+      // Call the marketplace.listSoftware function with the correct parameters
+      // No need for approval since the marketplace doesn't transfer the token
       const listTx = await marketplace.listSoftware(
-        repositoryAddress,
-        selectedToken,
-        priceInWei,
+        selectedToken, // tokenId
+        priceInWei,    // price
         { gasLimit: 3000000 }
       );
-      console.log("Listing transaction sent:", listTx.hash);
 
+      console.log("Listing transaction sent:", listTx.hash);
       const listReceipt = await listTx.wait();
       console.log("Software listed successfully, receipt:", listReceipt);
 
@@ -169,6 +149,7 @@ const ListSoftware = () => {
           ? { ...token, isListed: true }
           : token
       ));
+
       // Reset form
       setSelectedToken(null);
       setPrice("");
