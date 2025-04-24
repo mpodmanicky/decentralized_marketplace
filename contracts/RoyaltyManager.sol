@@ -2,10 +2,9 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract RoyaltyManager is Ownable, ReentrancyGuard {
+contract RoyaltyManager is Ownable {
     using SafeMath for uint256;
 
     // Platform constants
@@ -21,7 +20,7 @@ contract RoyaltyManager is Ownable, ReentrancyGuard {
         uint256 _softwareId,
         uint256 saleAmount,
         address primaryDeveloper
-    ) external payable nonReentrant {
+    ) external payable {
         require(msg.value == saleAmount, "Incorrect sale amount");
 
         uint256 primaryShare = saleAmount.mul(PRIMARY_DEVELOPER_SHARE).div(
