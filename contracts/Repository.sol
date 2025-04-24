@@ -31,6 +31,12 @@ contract Repository is ERC_5521 {
         _;
     }
 
+    event ReferenceCreated(
+        uint256 indexed tokenId,
+        address[] addresses,
+        uint256[][] tokenIds
+    );
+
     /// @notice The token ID is automatically assigned based on the current counter.
     /// @param count The current token ID counter.
     /// @param _tokenURI The URI for the token metadata.
@@ -53,6 +59,8 @@ contract Repository is ERC_5521 {
         safeMint(count, addresses, _tokenIds);
         _setTokenURI(count, _tokenURI);
         _transfer(msg.sender, address(this), count);
+        // Emit event for reference creation
+        emit ReferenceCreated(count, addresses, _tokenIds);
         return count;
     }
 
@@ -96,9 +104,9 @@ contract Repository is ERC_5521 {
         // Track the license for this software
         softwareToLicenses[softwareId].push(licenseId);
 
-        // Transfer the license to the licensee
+        // Transfer the license to the licensee and emit
         _transfer(msg.sender, licensee, licenseId);
-
+        //emit ReferenceCreated(licenseId, refAddresses, refTokenIds);
         return licenseId;
     }
 
